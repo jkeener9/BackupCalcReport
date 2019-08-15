@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
+using BackupCalcReport;
 
 // TODO: Replace the following version attributes by creating AssemblyInfo.cs. You can do this in the properties of the Visual Studio project.
 [assembly: AssemblyVersion("1.0.0.1")]
@@ -21,11 +22,11 @@ namespace VMS.TPS
 {
   public class Script
   {
-    public Script()
-    {
-    }
+    //public Script()
+    //{
+    //}
 
-    [MethodImpl(MethodImplOptions.NoInlining)]
+    //[MethodImpl(MethodImplOptions.NoInlining)]
 
         public void Execute(ScriptContext scriptContext, Window mainWindow)
         {
@@ -51,6 +52,13 @@ namespace VMS.TPS
         {
             // Your main code now goes here
 
+            var mainViewModel = new MainViewModel(planSetup);
+            var mainView = new MainView(mainViewModel);
+            mainWindow.Title = "Backup Calc Comparison";
+            mainWindow.Content = mainView;
+
+
+
             // grab the active plansetup.
 
             //if (planSetup == null)
@@ -74,7 +82,8 @@ namespace VMS.TPS
 
 
             // Retrieve list of plans displayed in Scope Window
-            
+            /*
+
             if (planSetupsInScope.Count() == 0)
             {
                 MessageBox.Show("Scope Window does not contain any plans.");
@@ -175,6 +184,9 @@ namespace VMS.TPS
             string Htmltext = strHTMLBuilder.ToString();
 
             return Htmltext;
+            
+             
+            */
 
         }
 
