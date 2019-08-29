@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using BackupCalcReport;
+using BackupCalcReport.ViewModels;
 
 // TODO: Replace the following version attributes by creating AssemblyInfo.cs. You can do this in the properties of the Visual Studio project.
 [assembly: AssemblyVersion("1.0.0.1")]
@@ -52,7 +53,7 @@ namespace VMS.TPS
         {
             // Your main code now goes here
 
-            var mainViewModel = new MainViewModel(planSetup);
+            var mainViewModel = new MainViewModel(patient, planSetupsInScope, planSetup);   //later remove planSetup
             var mainView = new MainView(mainViewModel);
             mainWindow.Title = "Backup Calc Comparison";
             mainWindow.Content = mainView;

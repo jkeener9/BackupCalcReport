@@ -15,6 +15,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using OxyPlot.Wpf;
 using VMS.TPS.Common.Model.API;
+using VMS.TPS.Common.Model.Types;
+using BackupCalcReport.ViewModels;
 
 namespace BackupCalcReport
 {
@@ -23,6 +25,10 @@ namespace BackupCalcReport
     /// </summary>
     public partial class MainView : UserControl
     {
+
+        
+        //DVH Section
+        
         // Create dummy PlotView to force OxyPlot.Wpf to be loaded
         private static readonly PlotView PlotView = new PlotView();
 
@@ -52,6 +58,10 @@ namespace BackupCalcReport
             var structure = (Structure)checkbox.DataContext;
             return structure;
         }
+
+                      
+
+        //PDF section
 
         private void ExportPlotAsPdf(object sender, RoutedEventArgs e)
         {

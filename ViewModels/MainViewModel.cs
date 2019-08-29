@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using OxyPlot;
@@ -7,21 +8,75 @@ using OxyPlot.Series;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 using Series = OxyPlot.Series.Series;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
+using BackupCalcReport.Helpers;
+using BackupCalcReport.Data;
 
-namespace BackupCalcReport
+namespace BackupCalcReport.ViewModels
 {
-    public class MainViewModel
+    public class MainViewModel : ViewModelBase
     {
+
+        private readonly Patient _patient;
+        //private readonly IEnumerable<PlanSetup> _planSetupsInScope;
         private readonly PlanSetup _plan;
 
-        public MainViewModel(PlanSetup plan)
+
+
+        private IEnumerable<PlanningItemViewModel> _planningItems;
+        public IEnumerable<PlanningItemViewModel> PlanningItems
         {
+            get { return _planningItems; }
+            private set { Set(ref _planningItems, value); }
+        }
+
+        private ObservableCollection<PlanningItemViewModel> _planSetupsInScope;
+        public ObservableCollection<PlanningItemViewModel> PlanSetupsInScope
+        {
+
+
+            get { return _planSetupsInScope; }
+            private set { Set(ref _planSetupsInScope, value); }
+        }
+
+        private PlanningItemViewModel _selectedPlanSetup;
+        public PlanningItemViewModel SelectedPlanSetup
+        {
+            get { return _selectedPlanSetup; }
+            set { Set(ref _selectedPlanSetup, value); }
+        }
+
+
+
+
+
+
+        public MainViewModel(Patient patient, IEnumerable<PlanSetup> planSetupsInScope, PlanSetup plan)  //later remove planSetup
+        {
+
+            _patient = patient;
+            //_planSetupsInScope = planSetupsInScope;
             _plan = plan;
+
+            
 
             Structures = GetPlanStructures();
             PlotModel = CreatePlotModel();
+
         }
 
+
+
+
+
+
+
+
+
+
+
+        //DVH creation
         public IEnumerable<Structure> Structures { get; private set; }
 
         public PlotModel PlotModel { get; private set; }
@@ -51,7 +106,7 @@ namespace BackupCalcReport
         private IEnumerable<Structure> GetPlanStructures()
         {
             return _plan.StructureSet != null
-                ? _plan.StructureSet.Structures
+                ? _plan.StructureSet.Structures.Where(Structure => !Structure.IsEmpty)
                 : null;
         }
 
@@ -66,13 +121,13 @@ namespace BackupCalcReport
         {
             plotModel.Axes.Add(new LinearAxis
             {
-                Title = "Dose [Gy]",
+                Title = "Dose [cGy]",
                 Position = AxisPosition.Bottom
             });
 
             plotModel.Axes.Add(new LinearAxis
             {
-                Title = "Volume [cc]",
+                Title = "Volume [%]",
                 Position = AxisPosition.Left
             });
         }
@@ -81,7 +136,7 @@ namespace BackupCalcReport
         {
             return _plan.GetDVHCumulativeData(structure,
                 DoseValuePresentation.Absolute,
-                VolumePresentation.AbsoluteCm3, 0.01);
+                VolumePresentation.Relative, 0.1);
         }
 
         private Series CreateDvhSeries(string structureId, DVHData dvh)
